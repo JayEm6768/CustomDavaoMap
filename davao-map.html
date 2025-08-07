@@ -208,6 +208,9 @@
     <div id="map"></div>
     <form id="markerForm">
         <div id="markerFormHeader" style="cursor:move;user-select:none;font-weight:600;font-size:1.1em;margin-bottom:0.7em;color:#1976d2;">Add Marker</div>
+        <label>Title:
+            <input type="text" id="markerTitle" maxlength="100" required placeholder="Enter marker title" style="margin-bottom:0.7em;" />
+        </label>
         <label>Color:
             <select id="markerColor">
                 <option value="red">Red</option>
@@ -217,8 +220,8 @@
             </select>
         </label>
         <label>Note:
-    <textarea id="markerNote" rows="4" maxlength="1000" required style="resize:vertical;"></textarea>
-</label>
+            <textarea id="markerNote" rows="4" maxlength="1000" required style="resize:vertical;"></textarea>
+        </label>
         <button type="submit">Add Marker</button>
         <button type="button" id="cancelMarker">Cancel</button>
     </form>
@@ -261,10 +264,20 @@
         const loginError = document.getElementById('loginError');
         const logoutBtn = document.getElementById('logoutBtn');
         const markerForm = document.getElementById('markerForm');
+        const markerTitle = document.getElementById('markerTitle');
         const markerColor = document.getElementById('markerColor');
         const markerNote = document.getElementById('markerNote');
         const cancelMarker = document.getElementById('cancelMarker');
         const markerFormHeader = document.getElementById('markerFormHeader');
+        const loginBox = document.getElementById('loginBox');
+
+        // Hide login modal if clicking outside the login box
+        loginModal.addEventListener('mousedown', function(e) {
+            if (e.target === loginModal) {
+                hideLogin();
+                markerMode = false;
+            }
+        });
 
         // --- Make marker form draggable ---
         let isDraggingMarkerForm = false, dragOffsetX = 0, dragOffsetY = 0;
@@ -371,11 +384,11 @@
         // Store markers in memory (could be extended to backend)
         const markers = [];
 
-        function addMarkerToMap(latlng, color, note) {
+        function addMarkerToMap(latlng, color, note, title) {
             const marker = L.marker(latlng, {icon: markerIcons[color]})
                 .addTo(map)
-                .bindPopup(`<b>Note:</b><br><p style='white-space:pre-line;max-width:260px;margin:0;'>${note}</p><br><b>Color:</b> ${color}`);
-            markers.push({latlng, color, note, marker});
+                .bindPopup(`<b>${title}</b><br><b>Note:</b><br><p style='white-space:pre-line;max-width:260px;margin:0;'>${note}</p><br><b>Color:</b> ${color}`);
+            markers.push({latlng, color, note, title, marker});
         }
 
 
@@ -396,15 +409,22 @@
             if (top < 0) top = 10;
             markerForm.style.left = left + 'px';
             markerForm.style.top = top + 'px';
+            markerTitle.value = '';
             markerColor.value = 'red';
             markerNote.value = '';
-            markerNote.focus();
+            markerTitle.focus();
         });
 
         markerForm.onsubmit = function(ev) {
             ev.preventDefault();
             if (!markerTempLatLng) return;
-            addMarkerToMap(markerTempLatLng, markerColor.value, markerNote.value);
+            if (!markerTitle.value.trim()) {
+                markerTitle.focus();
+                markerTitle.style.border = '2px solid #d32f2f';
+                setTimeout(() => { markerTitle.style.border = ''; }, 1200);
+                return;
+            }
+            addMarkerToMap(markerTempLatLng, markerColor.value, markerNote.value, markerTitle.value.trim());
             markerForm.style.display = 'none';
             markerTempLatLng = null;
             markerMode = false;
