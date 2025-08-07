@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Davao City Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #putMarkerBtn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1300;
+            padding: 1em 1.5em;
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 100vh;
+            width: 100vw;
+        }
+        .leaflet-container {
+            font-family: inherit;
+        }
+        #loginModal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(25, 118, 210, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        #loginBox {
+            background: #fff;
+            padding: 2.5em 2em 2em 2em;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(25, 118, 210, 0.18), 0 1.5px 6px rgba(0,0,0,0.08);
+            min-width: 320px;
+            max-width: 90vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #loginBox h2 {
+            color: #1976d2;
+            margin-bottom: 1.2em;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        #loginForm label {
+            display: block;
+            margin-bottom: 1em;
+            color: #333;
+            font-size: 1em;
+        }
+        #loginForm input[type="text"],
+        #loginForm input[type="password"] {
+            width: 100%;
+            padding: 0.7em 1em;
+            border: 1px solid #b0bec5;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-top: 0.3em;
+            background: #f7fafd;
+            transition: border 0.2s;
+        }
+        #loginForm input[type="text"]:focus,
+        #loginForm input[type="password"]:focus {
+            border: 1.5px solid #1976d2;
+            outline: none;
+            background: #fff;
+        }
+        #loginForm button[type="submit"] {
+            width: 100%;
+            padding: 0.8em 0;
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.5em;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+            transition: background 0.2s;
+        }
+        #loginForm button[type="submit"]:hover {
+            background: #1251a3;
+        }
+        #loginError {
+            color: #d32f2f !important;
+            background: #fff0f0;
+            border-radius: 6px;
+            padding: 0.5em 1em;
+            margin-top: 1em;
+            font-size: 0.98em;
+            text-align: center;
+        }
+        #markerForm {
+            position: absolute;
+            z-index: 1100;
+            background: #fff;
+            border: 1.5px solid #b0bec5;
+            border-radius: 16px;
+            padding: 1.5em 1.2em 1.2em 1.2em;
+            display: none;
+            min-width: 260px;
+            box-shadow: 0 4px 24px rgba(25, 118, 210, 0.13), 0 1.5px 6px rgba(0,0,0,0.08);
+        }
+        #markerForm label {
+            display: block;
+            margin-bottom: 1em;
+            color: #333;
+            font-size: 1em;
+        }
+        #markerForm select,
+#markerForm input[type="text"],
+#markerForm textarea {
+    width: 100%;
+    padding: 0.7em 1em;
+    border: 1px solid #b0bec5;
+    border-radius: 8px;
+    font-size: 1em;
+    margin-top: 0.3em;
+    background: #f7fafd;
+    transition: border 0.2s;
+    box-sizing: border-box;
+}
+#markerForm select:focus,
+#markerForm input[type="text"]:focus,
+#markerForm textarea:focus {
+    border: 1.5px solid #1976d2;
+    outline: none;
+    background: #fff;
+}
+        #markerForm button[type="submit"] {
+            width: 100%;
+            padding: 0.8em 0;
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.5em;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+            transition: background 0.2s;
+        }
+        #markerForm button[type="submit"]:hover {
+            background: #1251a3;
+        }
+        #markerForm button[type="button"] {
+            width: 100%;
+            padding: 0.8em 0;
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.5em;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.04);
+            transition: background 0.2s;
+        }
+        #markerForm button[type="button"]:hover {
+            background: #bdbdbd;
+        }
+        #logoutBtn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1200;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 0.5em 1em;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="loginModal" style="display:none;">
+        <div id="loginBox">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <label>Username:<br><input type="text" id="username" required></label>
+                <label>Password:<br><input type="password" id="password" required></label>
+                <button type="submit">Login</button>
+            </form>
+            <div id="loginError" style="color:red;display:none;margin-top:1em;">Invalid credentials</div>
+        </div>
+    </div>
+    <button id="logoutBtn" style="display:none;">Logout</button>
+    <button id="putMarkerBtn">Put Marker</button>
+    <div id="map"></div>
+    <form id="markerForm">
+        <div id="markerFormHeader" style="cursor:move;user-select:none;font-weight:600;font-size:1.1em;margin-bottom:0.7em;color:#1976d2;">Add Marker</div>
+        <label>Color:
+            <select id="markerColor">
+                <option value="red">Red</option>
+                <option value="yellow">Yellow</option>
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
+            </select>
+        </label>
+        <label>Note:
+    <textarea id="markerNote" rows="4" maxlength="1000" required style="resize:vertical;"></textarea>
+</label>
+        <button type="submit">Add Marker</button>
+        <button type="button" id="cancelMarker">Cancel</button>
+    </form>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // --- Map and Bounds Setup ---
+        const myCenter = [7.090917, 125.611417];
+        const boundsPoints = [
+            [7.045510, 125.584952],
+            [7.296067, 125.396947],
+            [7.401148, 125.614427],
+            [7.210719, 125.796855]
+        ];
+        const myBounds = L.latLngBounds(boundsPoints);
+
+        const map = L.map('map', {
+            center: myCenter,
+            zoom: 15,
+            maxBounds: myBounds,
+            maxBoundsViscosity: 1.0,
+            zoomControl: true,
+        });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        L.marker(myCenter).addTo(map)
+            .bindPopup('Custom Center: 7°05\'27.3"N 125°36\'41.1"E')
+            .openPopup();
+        map.setMinZoom(14);
+
+        // --- User Auth and UI Logic ---
+        const users = {
+            'viewer': 'viewer123',
+            'admin': '123'
+        };
+        let currentUser = null;
+        let markerTempLatLng = null;
+        const loginModal = document.getElementById('loginModal');
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const markerForm = document.getElementById('markerForm');
+        const markerColor = document.getElementById('markerColor');
+        const markerNote = document.getElementById('markerNote');
+        const cancelMarker = document.getElementById('cancelMarker');
+        const markerFormHeader = document.getElementById('markerFormHeader');
+
+        // --- Make marker form draggable ---
+        let isDraggingMarkerForm = false, dragOffsetX = 0, dragOffsetY = 0;
+        markerFormHeader.addEventListener('mousedown', function(e) {
+            isDraggingMarkerForm = true;
+            const rect = markerForm.getBoundingClientRect();
+            dragOffsetX = e.clientX - rect.left;
+            dragOffsetY = e.clientY - rect.top;
+            document.body.style.userSelect = 'none';
+        });
+        document.addEventListener('mousemove', function(e) {
+            if (!isDraggingMarkerForm) return;
+            let x = e.clientX - dragOffsetX;
+            let y = e.clientY - dragOffsetY;
+            // Keep form within viewport
+            const minX = 0, minY = 0;
+            const maxX = window.innerWidth - markerForm.offsetWidth;
+            const maxY = window.innerHeight - markerForm.offsetHeight;
+            x = Math.max(minX, Math.min(x, maxX));
+            y = Math.max(minY, Math.min(y, maxY));
+            markerForm.style.left = x + 'px';
+            markerForm.style.top = y + 'px';
+        });
+        document.addEventListener('mouseup', function() {
+            isDraggingMarkerForm = false;
+            document.body.style.userSelect = '';
+        });
+
+
+        function showLogin() {
+            loginModal.style.display = 'flex';
+        }
+        function hideLogin() {
+            loginModal.style.display = 'none';
+        }
+        function showLogout() {
+            logoutBtn.style.display = 'block';
+        }
+        function hideLogout() {
+            logoutBtn.style.display = 'none';
+        }
+        let markerMode = false;
+
+        const putMarkerBtn = document.getElementById('putMarkerBtn');
+
+        putMarkerBtn.onclick = function() {
+            if (!isEditor()) {
+                markerMode = true;
+                showLogin();
+            } else {
+                markerMode = true;
+                putMarkerBtn.textContent = 'Click on map to place marker';
+                putMarkerBtn.disabled = true;
+            }
+        };
+
+        function isEditor() {
+            return currentUser === 'admin';
+        }
+
+        loginForm.onsubmit = function(e) {
+            e.preventDefault();
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value;
+            if (users[u] && users[u] === p) {
+                currentUser = u;
+                hideLogin();
+                showLogout();
+                // If marker mode was triggered by button, enable map click for marker
+                if (markerMode) {
+                    putMarkerBtn.textContent = 'Click on map to place marker';
+                    putMarkerBtn.disabled = true;
+                }
+            } else {
+                loginError.style.display = 'block';
+            }
+        };
+        logoutBtn.onclick = function() {
+            currentUser = null;
+            hideLogout();
+        };
+
+        // --- Marker Logic ---
+        // Custom colored marker icons
+        const markerIcons = {
+            red: new L.Icon({
+                iconUrl: 'MarkerColor/marker-icon-red.svg',
+                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]
+            }),
+            yellow: new L.Icon({
+                iconUrl: 'MarkerColor/marker-icon-yellow.svg',
+                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]
+            }),
+            blue: new L.Icon({
+                iconUrl: 'MarkerColor/marker-icon-blue.svg',
+                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]
+            }),
+            green: new L.Icon({
+                iconUrl: 'MarkerColor/marker-icon-green.svg',
+                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]
+            })
+        };
+
+        // Store markers in memory (could be extended to backend)
+        const markers = [];
+
+        function addMarkerToMap(latlng, color, note) {
+            const marker = L.marker(latlng, {icon: markerIcons[color]})
+                .addTo(map)
+                .bindPopup(`<b>Note:</b><br><p style='white-space:pre-line;max-width:260px;margin:0;'>${note}</p><br><b>Color:</b> ${color}`);
+            markers.push({latlng, color, note, marker});
+        }
+
+
+        // Only editor can add markers, but prompt for login if not logged in
+        map.on('click', function(e) {
+            // Only allow marker placement if in marker mode and logged in as editor
+            if (!markerMode || !isEditor()) return;
+            markerTempLatLng = e.latlng;
+            markerForm.style.display = 'block';
+            // Place form near click, but keep within viewport
+            let left = e.originalEvent.pageX + 10;
+            let top = e.originalEvent.pageY - 10;
+            const formWidth = markerForm.offsetWidth || 280;
+            const formHeight = markerForm.offsetHeight || 260;
+            if (left + formWidth > window.innerWidth) left = window.innerWidth - formWidth - 10;
+            if (top + formHeight > window.innerHeight) top = window.innerHeight - formHeight - 10;
+            if (left < 0) left = 10;
+            if (top < 0) top = 10;
+            markerForm.style.left = left + 'px';
+            markerForm.style.top = top + 'px';
+            markerColor.value = 'red';
+            markerNote.value = '';
+            markerNote.focus();
+        });
+
+        markerForm.onsubmit = function(ev) {
+            ev.preventDefault();
+            if (!markerTempLatLng) return;
+            addMarkerToMap(markerTempLatLng, markerColor.value, markerNote.value);
+            markerForm.style.display = 'none';
+            markerTempLatLng = null;
+            markerMode = false;
+            putMarkerBtn.textContent = 'Put Marker';
+            putMarkerBtn.disabled = false;
+        };
+        cancelMarker.onclick = function() {
+            markerForm.style.display = 'none';
+            markerTempLatLng = null;
+            markerMode = false;
+            putMarkerBtn.textContent = 'Put Marker';
+            putMarkerBtn.disabled = false;
+        };
+
+        // Hide marker form if clicking outside (but not when dragging)
+        document.addEventListener('mousedown', function(e) {
+            if (markerForm.style.display === 'block' && !markerForm.contains(e.target) && !isDraggingMarkerForm) {
+                markerForm.style.display = 'none';
+                markerTempLatLng = null;
+                markerMode = false;
+                putMarkerBtn.textContent = 'Put Marker';
+                putMarkerBtn.disabled = false;
+            }
+        });
+
+        // On load, do not show login. Viewer can see map and markers immediately.
+    </script>
+</body>
+</html>
