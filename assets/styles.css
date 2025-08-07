@@ -1,0 +1,184 @@
+/* Davao City Map - Main Styles */
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+#map {
+    height: 100vh;
+    width: 100vw;
+}
+#putMarkerBtn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1300;
+    padding: 1em 1.5em;
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    font-size: 1.1em;
+    cursor: pointer;
+}
+.leaflet-container {
+    font-family: inherit;
+}
+#loginModal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(25, 118, 210, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+#loginBox {
+    background: #fff;
+    padding: 2.5em 2em 2em 2em;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(25, 118, 210, 0.18), 0 1.5px 6px rgba(0,0,0,0.08);
+    min-width: 320px;
+    max-width: 90vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#loginBox h2 {
+    color: #1976d2;
+    margin-bottom: 1.2em;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+#loginForm label {
+    display: block;
+    margin-bottom: 1em;
+    color: #333;
+    font-size: 1em;
+}
+#loginForm input[type="text"],
+#loginForm input[type="password"] {
+    width: 100%;
+    padding: 0.7em 1em;
+    border: 1px solid #b0bec5;
+    border-radius: 8px;
+    font-size: 1em;
+    margin-top: 0.3em;
+    background: #f7fafd;
+    transition: border 0.2s;
+}
+#loginForm input[type="text"]:focus,
+#loginForm input[type="password"]:focus {
+    border: 1.5px solid #1976d2;
+    outline: none;
+    background: #fff;
+}
+#loginForm button[type="submit"] {
+    width: 100%;
+    padding: 0.8em 0;
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.5em;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+    transition: background 0.2s;
+}
+#loginForm button[type="submit"]:hover {
+    background: #1251a3;
+}
+#loginError {
+    color: #d32f2f !important;
+    background: #fff0f0;
+    border-radius: 6px;
+    padding: 0.5em 1em;
+    margin-top: 1em;
+    font-size: 0.98em;
+    text-align: center;
+}
+#markerForm {
+    position: absolute;
+    z-index: 1100;
+    background: #fff;
+    border: 1.5px solid #b0bec5;
+    border-radius: 16px;
+    padding: 1.5em 1.2em 1.2em 1.2em;
+    display: none;
+    min-width: 260px;
+    box-shadow: 0 4px 24px rgba(25, 118, 210, 0.13), 0 1.5px 6px rgba(0,0,0,0.08);
+}
+#markerForm label {
+    display: block;
+    margin-bottom: 1em;
+    color: #333;
+    font-size: 1em;
+}
+#markerForm select,
+#markerForm input[type="text"],
+#markerForm textarea {
+    width: 100%;
+    padding: 0.7em 1em;
+    border: 1px solid #b0bec5;
+    border-radius: 8px;
+    font-size: 1em;
+    margin-top: 0.3em;
+    background: #f7fafd;
+    transition: border 0.2s;
+    box-sizing: border-box;
+}
+#markerForm select:focus,
+#markerForm input[type="text"]:focus,
+#markerForm textarea:focus {
+    border: 1.5px solid #1976d2;
+    outline: none;
+    background: #fff;
+}
+#markerForm button[type="submit"] {
+    width: 100%;
+    padding: 0.8em 0;
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.5em;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+    transition: background 0.2s;
+}
+#markerForm button[type="submit"]:hover {
+    background: #1251a3;
+}
+#markerForm button[type="button"] {
+    width: 100%;
+    padding: 0.8em 0;
+    background: #e0e0e0;
+    color: #333;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.5em;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.04);
+    transition: background 0.2s;
+}
+#markerForm button[type="button"]:hover {
+    background: #bdbdbd;
+}
+#logoutBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1200;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.5em 1em;
+    cursor: pointer;
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Davao City Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+    <div id="loginModal" style="display:none;">
+        <div id="loginBox">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <label>Username:<br><input type="text" id="username" required></label>
+                <label>Password:<br><input type="password" id="password" required></label>
+                <button type="submit">Login</button>
+            </form>
+            <div id="loginError" style="color:red;display:none;margin-top:1em;">Invalid credentials</div>
+        </div>
+    </div>
+    <button id="logoutBtn" style="display:none;">Logout</button>
+    <button id="putMarkerBtn">Put Marker</button>
+    <div id="map"></div>
+    <form id="markerForm">
+        <div id="markerFormHeader" style="cursor:move;user-select:none;font-weight:600;font-size:1.1em;margin-bottom:0.7em;color:#1976d2;">Add Marker</div>
+        <label>Title:
+            <input type="text" id="markerTitle" maxlength="100" required placeholder="Enter marker title" style="margin-bottom:0.7em;" />
+        </label>
+        <label>Color:
+            <select id="markerColor">
+                <option value="red">Red</option>
+                <option value="yellow">Yellow</option>
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
+            </select>
+        </label>
+        <label>Note:
+            <textarea id="markerNote" rows="4" maxlength="1000" required style="resize:vertical;"></textarea>
+        </label>
+        <button type="submit">Add Marker</button>
+        <button type="button" id="cancelMarker">Cancel</button>
+    </form>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="assets/main.js"></script>
+</body>
+</html>
