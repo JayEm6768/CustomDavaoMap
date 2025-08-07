@@ -26,10 +26,7 @@ L.marker(myCenter).addTo(map)
 map.setMinZoom(14);
 
 // --- User Auth and UI Logic ---
-const users = {
-    'viewer': 'viewer123',
-    'admin': '123'
-};
+const users = window.APP_USERS || {};
 let currentUser = null;
 let markerTempLatLng = null;
 const loginModal = document.getElementById('loginModal');
