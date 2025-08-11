@@ -133,19 +133,23 @@ logoutBtn.onclick = function() {
 // Custom colored marker icons
 const markerIcons = {
     red: new L.Icon({
-        iconUrl: 'assets/MarkerColor/marker-icon-red.svg',
+        iconUrl: 'http://localhost/GLOBE/assets/MarkerColor/marker-icon-red.svg',
+        shadowUrl: null,
         iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]
     }),
     yellow: new L.Icon({
-        iconUrl: 'assets/MarkerColor/marker-icon-yellow.svg',
+        iconUrl: 'http://localhost/GLOBE/assets/MarkerColor/marker-icon-yellow.svg',
+        shadowUrl: null,
         iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]
     }),
     blue: new L.Icon({
-        iconUrl: 'assets/MarkerColor/marker-icon-blue.svg',
+        iconUrl: 'http://localhost/GLOBE/assets/MarkerColor/marker-icon-blue.svg',
+        shadowUrl: null,
         iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]
     }),
     green: new L.Icon({
-        iconUrl: 'assets/MarkerColor/marker-icon-green.svg',
+        iconUrl: 'http://localhost/GLOBE/assets/MarkerColor/marker-icon-green.svg',
+        shadowUrl: null,
         iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34]
     })
 };
