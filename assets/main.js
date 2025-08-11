@@ -13,6 +13,8 @@ const myBounds = L.latLngBounds(boundsPoints);
 const map = L.map('map', {
     center: myCenter,
     zoom: 15,
+    minZoom: 13, // Prevent zooming out too far
+    maxZoom: 18, // Allow zooming in closer
     maxBounds: myBounds,
     maxBoundsViscosity: 1.0,
     zoomControl: true,
@@ -20,10 +22,8 @@ const map = L.map('map', {
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
-L.marker(myCenter).addTo(map)
-    .bindPopup('Custom Center: 7°05\'27.3"N 125°36\'41.1"E')
-    .openPopup();
-map.setMinZoom(14);
+// Center marker and popup removed as requested
+// minZoom is now set in map options above
 
 // --- User Auth and UI Logic ---
 const users = window.APP_USERS || {};
